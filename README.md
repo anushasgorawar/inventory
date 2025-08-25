@@ -46,7 +46,7 @@ Create workspace -> Create collection -> create a request
 10. port request body for postman
 ```
 {
-    "Name":"Orange",
+    "Name":"Bluberry",
     "Price":1.99,
     "Quantity":10
 }

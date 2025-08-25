@@ -46,18 +46,24 @@ func (p *Product) addProduct(DB *sql.DB) error {
 		return nil
 	}
 	LastInsertId, _ := res.LastInsertId()
-	fmt.Println("Last insertedID:", LastInsertId)
+	// fmt.Println("Last insertedID:", LastInsertId)
 	p.ID = int(LastInsertId)
 	return nil
 }
 
 func (p *Product) updateProduct(DB *sql.DB) error {
 	query := fmt.Sprintf("update products set name=\"%v\", quantity=%v, price=%v where id=%v", p.Name, p.Quantity, p.Price, p.ID)
-	res, err := DB.Exec(query)
+	_, err := DB.Exec(query)
 	if err != nil {
 		return err
 	}
 	log.Println(p)
 	// log.Println(res.RowsAffected())
 	return nil
+}
+
+func (p *Product) deleteProduct(DB *sql.DB) error {
+	query := fmt.Sprintf("delete from products where id=%v", p.ID)
+	_, err := DB.Exec(query)
+	return err
 }

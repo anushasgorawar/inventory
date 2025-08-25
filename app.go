@@ -50,6 +50,7 @@ func (app *App) handleRoutes() {
 	app.Router.HandleFunc("/product/{id}", app.oneProduct).Methods("GET")
 	app.Router.HandleFunc("/product", app.addProduct).Methods("POST")
 	app.Router.HandleFunc("/product/{id}", app.updateProduct).Methods("PUT")
+	app.Router.HandleFunc("/product/{id}", app.deleteProduct).Methods("DELETE")
 }
 
 // payload interface{} = any type
@@ -142,4 +143,17 @@ func (app *App) updateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Printf("Product %v updated!", prod.Name)
 	sendResponse(w, http.StatusOK, prod)
+}
+
+func (app *App) deleteProduct(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, "Invalid Product ID")
+		return
+	}
+	var prod Product
+	prod.ID = id
+	prod.deleteProduct(app.DB)
+	sendResponse(w, http.StatusOK, map[string]string{"result": "Successful Deletion"})
 }
