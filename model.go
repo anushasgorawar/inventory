@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 )
 
 type Product struct {
@@ -34,7 +35,7 @@ func (p *Product) oneProduct(DB *sql.DB) error {
 	query := fmt.Sprintf("SELECT name,quantity,price from products where id=%v;", p.ID)
 	rows := DB.QueryRow(query)
 	//Since id is unique, rows will be 1
-	err := rows.Scan(&p.Name, &p.Quantity, &p.Price)
+	err := rows.Scan(&p.Name, &p.Quantity, &p.Price) //assigning values to the p object
 	return err
 }
 
@@ -47,5 +48,16 @@ func (p *Product) addProduct(DB *sql.DB) error {
 	LastInsertId, _ := res.LastInsertId()
 	fmt.Println("Last insertedID:", LastInsertId)
 	p.ID = int(LastInsertId)
+	return nil
+}
+
+func (p *Product) updateProduct(DB *sql.DB) error {
+	query := fmt.Sprintf("update products set name=\"%v\", quantity=%v, price=%v where id=%v", p.Name, p.Quantity, p.Price, p.ID)
+	res, err := DB.Exec(query)
+	if err != nil {
+		return err
+	}
+	log.Println(p)
+	// log.Println(res.RowsAffected())
 	return nil
 }

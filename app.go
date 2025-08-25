@@ -49,6 +49,7 @@ func (app *App) handleRoutes() {
 	app.Router.HandleFunc("/products", app.allProducts).Methods("GET")
 	app.Router.HandleFunc("/product/{id}", app.oneProduct).Methods("GET")
 	app.Router.HandleFunc("/product", app.addProduct).Methods("POST")
+	app.Router.HandleFunc("/product/{id}", app.updateProduct).Methods("PUT")
 }
 
 // payload interface{} = any type
@@ -110,6 +111,35 @@ func (app *App) addProduct(w http.ResponseWriter, r *http.Request) {
 		sendError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	log.Println("Product added")
+	log.Printf("Product %v updated!", prod.Name)
+	sendResponse(w, http.StatusOK, prod)
+}
+
+func (app *App) updateProduct(w http.ResponseWriter, r *http.Request) {
+	//get id of the existing product
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, "Invalid Product ID")
+		return
+	}
+
+	//get the new json from r
+	var prod Product
+	err = json.NewDecoder(r.Body).Decode(&prod)
+	//NewDecoder returns a new decoder that reads from r.
+	//Decode reads the next JSON-encoded value from its input and stores it in the value pointed to by v.
+	if err != nil {
+		log.Println("Error: Could not add product")
+		sendError(w, http.StatusBadRequest, "Invalid Request Payload") //400
+		return
+	}
+	prod.ID = id
+	err = prod.updateProduct(app.DB)
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	log.Printf("Product %v updated!", prod.Name)
 	sendResponse(w, http.StatusOK, prod)
 }

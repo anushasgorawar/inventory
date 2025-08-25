@@ -43,4 +43,11 @@ Create workspace -> Create collection -> create a request
 
 9. app.go has the routing functions and models.go has all the db related methods
 
-10. 
+10. port request body for postman
+```
+{
+    "Name":"Orange",
+    "Price":1.99,
+    "Quantity":10
+}
+```
