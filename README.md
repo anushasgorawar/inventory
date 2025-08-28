@@ -60,3 +60,10 @@ To run test:
 (base) anushasg@Anushas-MacBook-Air inventory % go test
 PASS
 ok      github.com/anushasgorawar/inventory     0.684s
+
+
+## To run:
+`go build .`
+`./inventory`
+OR
+`go run .`
