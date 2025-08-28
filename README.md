@@ -51,3 +51,12 @@ Create workspace -> Create collection -> create a request
     "Quantity":10
 }
 ```
+
+11. TestCases for the APIs
+Instead of hardcoding DbUser, DbPassword, DbName just in constants.go, we can pass then to initiliase ffunction in the test folder as well.
+- initialise
+- test for getproduct
+To run test:
+(base) anushasg@Anushas-MacBook-Air inventory % go test
+PASS
+ok      github.com/anushasgorawar/inventory     0.684s

@@ -24,7 +24,7 @@ func HandleError(err error) {
 }
 
 // Create connection string and open a db connection
-func (app *App) Initialise() error {
+func (app *App) Initialise(DbUser string, DbPassword string, DbName string) error {
 
 	//Initialise DB connection
 	ConnectionString := fmt.Sprintf("%v:%v@tcp(127.0.0.1:3306)/%v", DbUser, DbPassword, DbName)
@@ -112,8 +112,8 @@ func (app *App) addProduct(w http.ResponseWriter, r *http.Request) {
 		sendError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	log.Printf("Product %v updated!", prod.Name)
-	sendResponse(w, http.StatusOK, prod)
+	log.Printf("Product %v added!", prod.Name)
+	sendResponse(w, http.StatusCreated, prod) //201
 }
 
 func (app *App) updateProduct(w http.ResponseWriter, r *http.Request) {
@@ -154,6 +154,10 @@ func (app *App) deleteProduct(w http.ResponseWriter, r *http.Request) {
 	}
 	var prod Product
 	prod.ID = id
-	prod.deleteProduct(app.DB)
+	err = prod.deleteProduct(app.DB)
+	if err != nil {
+		sendError(w, http.StatusNotFound, "Invalid Product ID")
+		return
+	}
 	sendResponse(w, http.StatusOK, map[string]string{"result": "Successful Deletion"})
 }
