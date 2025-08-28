@@ -98,27 +98,19 @@ func TestCreateProduct(t *testing.T) {
 
 func TestDeleteProduct(t *testing.T) {
 	clearTable()
-
 	addToTable("chair", 1, 25.99)
+
 	request, _ := http.NewRequest("GET", "/product/1", nil)
 	response := sendRequest(request)
-	log.Println("ResponseCode:", response.Code)
 	checkStatusCode(t, http.StatusOK, response.Code)
 
 	request, _ = http.NewRequest("DELETE", "/product/1", nil)
 	response = sendRequest(request)
-	log.Println("ResponseCode:", response.Code)
 	checkStatusCode(t, http.StatusOK, response.Code)
-
-	request, _ = http.NewRequest("DELETE", "/product/1", nil)
-	response = sendRequest(request)
-	log.Println("ResponseCode:", response.Code)
-	checkStatusCode(t, http.StatusOK, response.Code) //Should fail
 
 	request, _ = http.NewRequest("GET", "/product/1", nil)
 	response = sendRequest(request)
-	log.Println("ResponseCode:", response.Code)
-	checkStatusCode(t, http.StatusOK, response.Code) //Should fail
+	checkStatusCode(t, http.StatusNotFound, response.Code)
 }
 
 func TestUpdateProduct(t *testing.T) {
@@ -141,7 +133,6 @@ func TestUpdateProduct(t *testing.T) {
 	if oldValue["ID"] != newValue["ID"] {
 		t.Errorf("Expected quantity: %v, Got: %v", newValue["ID"], oldValue["ID"]) //doesnt change
 	}
-	log.Println(oldValue, newValue)
 	if oldValue["Name"] == newValue["Name"] {
 		t.Errorf("Expected quantity: %v, Got: %v", newValue["Name"], oldValue["Name"]) //name is updated
 	}

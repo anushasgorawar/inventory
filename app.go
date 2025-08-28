@@ -92,7 +92,11 @@ func (app *App) oneProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	p := Product{ID: id}
-	p.oneProduct(app.DB)
+	err = p.oneProduct(app.DB)
+	if err != nil {
+		sendError(w, http.StatusNotFound, err.Error())
+		return
+	}
 	sendResponse(w, http.StatusOK, p)
 }
 

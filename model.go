@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
 )
 
 type Product struct {
@@ -57,13 +56,13 @@ func (p *Product) updateProduct(DB *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	log.Println(p)
+	// log.Println(p)
 	// log.Println(res.RowsAffected())
 	return nil
 }
 
 func (p *Product) deleteProduct(DB *sql.DB) error {
-	query := fmt.Sprintf("delete from products where id=%v", p.ID)
+	query := fmt.Sprintf("DELETE FROM products WHERE id=%v", p.ID)
 	_, err := DB.Exec(query)
 	return err
 }
